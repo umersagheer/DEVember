@@ -39,6 +39,7 @@ export default function RootLayout() {
         name="index"
         options={{
           title: "DEVember Fest",
+          headerBackVisible: false,
         }}
       />
     </Stack>
