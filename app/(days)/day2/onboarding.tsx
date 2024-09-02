@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { router, Stack } from "expo-router";
 import {
   GitCompareArrows,
@@ -51,6 +52,22 @@ export default function Onboarding() {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.indicatorContainer}>
+        {onboardingSteps.map((step, index) => (
+          <View
+            key={index}
+            style={[
+              styles.indicator,
+              {
+                backgroundColor:
+                  index === currentStep
+                    ? Colors.light.background
+                    : Colors.light.backgroundTint,
+              },
+            ]}
+          ></View>
+        ))}
+      </View>
       <View style={styles.innerContainer}>
         {icon}
         <Text style={styles.title}>{title}</Text>
@@ -63,10 +80,7 @@ export default function Onboarding() {
         <Pressable
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
-          style={({ pressed }) => [
-            styles.button,
-            { opacity: isPressed ? 0.7 : 1.0 },
-          ]}
+          style={[styles.button, { opacity: isPressed ? 0.7 : 1.0 }]}
           onPress={onContinue}
         >
           <Text style={styles.buttonText}>Continue</Text>
@@ -88,6 +102,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  indicatorContainer: {
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  indicator: {
+    flex: 1,
+    height: 3,
+    borderRadius: 5,
+    backgroundColor: "#fdfdfd",
   },
   title: {
     color: "#fdfdfd",

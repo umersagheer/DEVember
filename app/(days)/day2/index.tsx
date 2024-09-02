@@ -1,6 +1,6 @@
 import { Link, Stack } from "expo-router";
 import React, { Component } from "react";
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default class Day1 extends Component {
   render() {
