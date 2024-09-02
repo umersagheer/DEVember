@@ -1,13 +1,24 @@
 import { Colors } from "@/constants/Colors";
 import { router, Stack } from "expo-router";
 import {
-  GitCompareArrows,
   SnowflakeIcon,
   SparkleIcon,
   UniversityIcon,
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
+import Animated, {
+  FadeIn,
+  FlipInEasyX,
+  FlipInEasyY,
+  ZoomInEasyDown,
+  ZoomInEasyUp,
+} from "react-native-reanimated";
 
 const onboardingSteps = [
   {
@@ -44,10 +55,24 @@ export default function Onboarding() {
     }
   };
 
+  const onBack = () => {
+    const isFirst = currentStep === 0;
+    if (isFirst) {
+      endOnboarding();
+    } else {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   const endOnboarding = () => {
     setCurrentStep(0);
     router.back();
   };
+
+  const swipes = Gesture.Simultaneous(
+    Gesture.Fling().direction(Directions.RIGHT).onStart(onBack),
+    Gesture.Fling().direction(Directions.LEFT).onStart(onContinue)
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,24 +93,33 @@ export default function Onboarding() {
           ></View>
         ))}
       </View>
-      <View style={styles.innerContainer}>
-        {icon}
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      <View style={styles.buttonsRow}>
-        <Text style={styles.buttonText} onPress={endOnboarding}>
-          Skip
-        </Text>
-        <Pressable
-          onPressIn={() => setIsPressed(true)}
-          onPressOut={() => setIsPressed(false)}
-          style={[styles.button, { opacity: isPressed ? 0.7 : 1.0 }]}
-          onPress={onContinue}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </Pressable>
-      </View>
+      <GestureDetector gesture={swipes}>
+        <View>
+          <Animated.View key={currentStep} style={styles.innerContainer}>
+            <Animated.View entering={FadeIn}>{icon}</Animated.View>
+            <Animated.Text entering={ZoomInEasyUp} style={styles.title}>
+              {title}
+            </Animated.Text>
+            <Animated.Text entering={FlipInEasyX} style={styles.description}>
+              {description}
+            </Animated.Text>
+          </Animated.View>
+
+          <View style={styles.buttonsRow}>
+            <Text style={styles.buttonText} onPress={endOnboarding}>
+              Skip
+            </Text>
+            <Pressable
+              onPressIn={() => setIsPressed(true)}
+              onPressOut={() => setIsPressed(false)}
+              style={[styles.button, { opacity: isPressed ? 0.7 : 1.0 }]}
+              onPress={onContinue}
+            >
+              <Text style={styles.buttonText}>Continue</Text>
+            </Pressable>
+          </View>
+        </View>
+      </GestureDetector>
     </SafeAreaView>
   );
 }
@@ -106,6 +140,7 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     flexDirection: "row",
     gap: 10,
+    marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -8,6 +8,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,19 +30,21 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.light.background },
-        headerTitleAlign: "center",
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "DEVember Fest",
-          headerBackVisible: false,
+    <GestureHandlerRootView>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: Colors.light.background },
+          headerTitleAlign: "center",
         }}
-      />
-    </Stack>
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            title: "DEVember Fest",
+            headerBackVisible: false,
+          }}
+        />
+      </Stack>
+    </GestureHandlerRootView>
   );
 }
